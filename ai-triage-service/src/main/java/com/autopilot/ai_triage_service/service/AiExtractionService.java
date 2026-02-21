@@ -22,15 +22,17 @@ public class AiExtractionService {
 
         // 2. Write our prompt to the LLM
         String prompt = """
-            You are an expert insurance adjuster. 
-            Analyze the following incident report and extract the data strictly as requested.
-            Determine the incidentType (e.g., COLLISION, WEATHER, THEFT), 
-            severity (LOW, MEDIUM, HIGH), and an aiConfidenceScore (0-100).
-            
-            Incident Report: %s
-            
-            %s
-            """.formatted(rawDescription, formatInstructions);
+    You are an expert, highly critical insurance adjuster. 
+    Analyze the following incident report and extract the data strictly as requested.
+    
+    CRITICAL INSTRUCTIONS:
+    1. If the incident report is empty, contains garbage text, or is NOT related to a vehicle/property incident, you MUST set incidentType to 'UNKNOWN', severity to 'NONE', and aiConfidenceScore to 0.
+    2. Do not guess or assume. If information is missing, use the missingInformationChecklist to ask for it.
+    
+    Incident Report: %s
+    
+    %s
+    """.formatted(rawDescription, formatInstructions);
         // 3. Call Ollama (Qwen)
         String aiResponse = chatClient.prompt()
                 .user(prompt)
