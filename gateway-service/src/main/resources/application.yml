@@ -1,0 +1,41 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: gateway-service
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:9080/realms/autopilot-realm
+
+  # --- NEW ROUTING CONFIGURATION ---
+  cloud:
+    gateway:
+      routes:
+        # Route 1: The Intake Service
+        - id: intake-service-route
+          # Where should the gateway forward the request? (We will build this next)
+          uri: http://localhost:8081
+          # How does the gateway know to use this route?
+          predicates:
+            - Path=/api/v1/intake/**
+
+      # Route 2: The Human Review Service (REST Baseline)
+        - id: human-review-route
+          uri: http://localhost:8083
+          predicates:
+            - Path=/api/v1/review/**
+
+#  **What did we just do?** We told the Gateway: *"If anyone comes to you with a valid badge and asks to go to `/api/v1/intake/...`, forward their entire request to `http://localhost:8081`."*
+
+---
+
+### Your Exercise for the end of Phase 2
+
+#1. Get your `access_token` from Keycloak using the first `curl` command.
+#2. Use the token to hit the Gateway and confirm you get a `404 Not Found` instead of a `401 Unauthorized`.
+#3. Add the routing configuration to your `application.yml`.
+#
+#Once you have successfully received that `404 Not Found` and updated your YAML, **Phase 2 is completely finished.** Are you ready for me to outline Phase 3, where we finally build the "Intake Service" to receive our AI incident reports and save them to PostgreSQL?

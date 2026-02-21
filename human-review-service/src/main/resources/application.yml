@@ -1,0 +1,39 @@
+server:
+  port: 8083
+
+spring:
+  application:
+    name: human-review-service
+
+  # Database settings (We use the same Postgres instance, just a new table)
+  datasource:
+    url: jdbc:postgresql://localhost:5432/claim_db?createDatabaseIfNotExist=true&useSSL=false
+    username: claim_user
+    password: claim_password
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+  # Kafka settings
+  kafka:
+    bootstrap-servers: localhost:29092
+    consumer:
+      group-id: human-review-group
+      auto-offset-reset: earliest
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+
+  # Security
+#  security:
+#    oauth2:
+#      resourceserver:
+#        jwt:
+#          issuer-uri: http://localhost:9080/realms/autopilot-realm
+
+  # GraphQL Configuration
+  graphql:
+    graphiql:
+      enabled: true # This gives us a beautiful web UI to test GraphQL later!
+      path: /api/v1/review/graphiql # The Web UI
+    path: /api/v1/review/graphql # The actual API endpoint
+    websocket:
+      path: /api/v1/review/graphql

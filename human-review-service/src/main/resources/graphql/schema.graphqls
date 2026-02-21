@@ -1,0 +1,27 @@
+# 1. The Object: This defines what a Claim looks like
+type ClaimRecord {
+    incidentId: ID!
+    incidentType: String
+    severity: String
+    policeReportMentioned: Boolean
+    injuriesReported: Boolean
+    aiConfidenceScore: Int
+    missingInformationChecklist: String
+    status: String
+}
+
+# 2. Queries: How the frontend ASKS for data (Like a REST GET)
+type Query {
+    # Returns an array of ClaimRecords
+    getAllPendingClaims: [ClaimRecord]
+}
+
+# 3. Mutations: How the frontend CHANGES data (Like a REST POST/PUT)
+type Mutation {
+    # The human adjuster calls this to officially approve a claim
+    approveClaim(incidentId: ID!): ClaimRecord
+}
+type Subscription {
+    # The frontend will listen to this channel
+    claimAdded: ClaimRecord
+}

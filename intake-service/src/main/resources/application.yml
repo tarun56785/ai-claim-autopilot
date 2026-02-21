@@ -1,0 +1,21 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: intake-service
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/claim_db?createDatabaseIfNotExist=true&useSSL=false
+    username: claim_user
+    password: claim_password
+  jpa:
+    hibernate:
+      ddl-auto: update # Automatically creates our tables
+    show-sql: true
+
+  kafka:
+    bootstrap-servers: localhost:29092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer

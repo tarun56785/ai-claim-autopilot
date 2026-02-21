@@ -1,0 +1,25 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: ai-triage-service
+
+  kafka:
+    bootstrap-servers: localhost:29092
+    consumer:
+      group-id: ai-triage-group
+      auto-offset-reset: earliest
+      # We receive raw JSON strings from the Intake Service
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      # We will send our Java Record to the next topic, serialized as JSON
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+  ai:
+    ollama:
+      base-url: http://localhost:11434
+      chat:
+        options:
+          model: qwen2.5:3b
+          temperature: 0.1 # In AI, a high temperature means creative and chatty. A low temperature means strict, obedient, and analytical perfect for JSON extraction
